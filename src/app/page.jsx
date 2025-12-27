@@ -98,7 +98,7 @@ const page = () => {
 
 
         <section className='h-screen bg-[#cdb9ab] flex items-center justify-center'>
-          <h1 className='text-3xl md:text-4xl font-times text-[#331707]'>Your next section goes here.</h1>
+          <h1 className='text-lg md:text-xltext-[#331707]'>Your next section goes here.</h1>
         </section>
       </div>
     </div>
