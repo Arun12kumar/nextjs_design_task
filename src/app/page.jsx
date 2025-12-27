@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import Logo3D from '@/components/Logo3D';
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother);
 
 const page = () => {
+  const cubeRef = useRef(null);
 
 
   useGSAP(() => {
@@ -21,7 +23,7 @@ const page = () => {
     });
 
 
-    gsap.timeline({
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#hero-section",
         start: "top top",
@@ -30,11 +32,17 @@ const page = () => {
         pin: true,
       },
     })
-      .fromTo("#hero-content",
-        { scale: 1, filter: "blur(0px)", opacity: 1 },
-        { scale: 1.4, filter: "blur(12px)", opacity: 0, ease: "none" }
-      );
 
+    tl.fromTo("#hero-content",
+      { scale: 1, filter: "blur(0px)", opacity: 1 },
+      { scale: 1.4, filter: "blur(12px)", opacity: 0, ease: "none" }
+    );
+
+    tl.fromTo("#svgicon",
+      { opacity: 1 },
+      { opacity: 0, ease: "none" },
+      0
+    );
 
     gsap.timeline({
       scrollTrigger: {
@@ -45,12 +53,10 @@ const page = () => {
         pin: true,
       },
     })
-      .fromTo("#about-content",
-        { scale: 1.4, filter: "blur(12px)", opacity: 0 },
-        { scale: 1, filter: "blur(0px)", opacity: 1, ease: "none" }
-      )
-
-
+    .fromTo("#about-content",
+      { scale: 1.4, filter: "blur(12px)", opacity: 0 },
+      { scale: 1, filter: "blur(0px)", opacity: 1, ease: "none" }
+    );
   }, []);
 
   return (
@@ -59,7 +65,7 @@ const page = () => {
 
         <section id="hero-section" className='h-[80vh] flex items-center justify-center bg-[#331707]'>
           <div id='hero-content' className='w-[90%] md:w-[80%] lg:w-[65%] text-center flex flex-col items-center'>
-            <svg className="w-[120px] h-[120px] md:w-[200px] md:h-[200px]" viewBox="0 0 463 284" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg id='svgicon' className="w-[120px] h-[120px] md:w-[200px] md:h-[200px]" viewBox="0 0 463 284" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect y="179" width="105" height="105" fill="#FFE9D9" />
               <rect x="179" y="179" width="105" height="105" fill="#FFE9D9" />
               <rect x="31" y="105.246" width="105" height="105" transform="rotate(-45 31 105.246)" fill="#FFE9D9" />
@@ -71,7 +77,14 @@ const page = () => {
               The First Media Company crafted For the Digital First Generation
             </h1>
           </div>
+          
         </section>
+        <Logo3D cubeRef={cubeRef} />
+        <Logo3D cubeRef={cubeRef} />
+        <Logo3D cubeRef={cubeRef} />
+        <Logo3D cubeRef={cubeRef} />
+        <Logo3D cubeRef={cubeRef} />
+        <Logo3D cubeRef={cubeRef} />
 
 
         <section id="about-section" className='h-screen flex items-center justify-center bg-[#331707] py-20'>
