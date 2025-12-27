@@ -11,7 +11,16 @@ gsap.registerPlugin(useGSAP, ScrollTrigger, ScrollSmoother);
 
 const page = () => {
   const cubeRef = useRef(null);
+  const cubeRefs = useRef([]);
 
+  const logoTargets = [
+    { top: '18%', left: '25%', rotY: Math.PI / 4, rotX: Math.PI / 8, scale: 1 },
+    { top: '18%', left: '75%', rotY: -Math.PI / 4, rotX: Math.PI / 6, scale: 1 },
+    { top: '38%', left: '12%', rotY: Math.PI / 2, rotX: Math.PI / 8, scale: 0.95 },
+    { top: '38%', left: '88%', rotY: -Math.PI / 2, rotX: Math.PI / 6, scale: 0.95 },
+    { top: '62%', left: '25%', rotY: Math.PI / 3, rotX: Math.PI / 4, scale: 1 },
+    { top: '62%', left: '75%', rotY: -Math.PI / 3, rotX: Math.PI / 4, scale: 1 }
+  ];
 
   useGSAP(() => {
 
@@ -38,11 +47,47 @@ const page = () => {
       { scale: 1.4, filter: "blur(12px)", opacity: 0, ease: "none" }
     );
 
+    // animate svg rects to blue then fade svg out and fade the hero Logo3D in
+    tl.to("#svgicon rect", {  ease: "none" }, 0);
+
     tl.fromTo("#svgicon",
       { opacity: 1 },
       { opacity: 0, ease: "none" },
-      0
+      0.25
     );
+
+    tl.fromTo('#logo3d-hero',
+      { opacity: 0, scale: 0.9 },
+      { opacity: 1, scale: 1, ease: 'none' },
+      0.3
+    );
+
+    // animate six logos out from center to target positions while rotating/scaling their cubes
+    logoTargets.forEach((t, i) => {
+      const wrap = `#logo-wrap-${i+1}`;
+
+      gsap.set(wrap, { position: 'absolute', top: '50%', left: '50%', xPercent: -50, yPercent: -50, transformOrigin: 'center' });
+
+      tl.to(wrap, { top: t.top, left: t.left, opacity: 1, scale: t.scale, ease: 'power2.out' }, 0.15 + i * 0.02);
+
+      // rotate the cube mesh inside each Logo3D during the scroll
+      const cref = cubeRefs.current[i] && cubeRefs.current[i].current;
+      if (cref) {
+        gsap.to(cref.rotation, {
+          y: t.rotY,
+          x: t.rotX,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#hero-section',
+            start: 'top top',
+            end: '+=70%',
+            scrub: true,
+          }
+        });
+      }
+    });
+
+
 
     gsap.timeline({
       scrollTrigger: {
@@ -63,9 +108,9 @@ const page = () => {
     <div id="smooth-wrapper" className="bg-[#331707] overflow-hidden">
       <div id="smooth-content">
 
-        <section id="hero-section" className='h-[80vh] flex items-center justify-center bg-[#331707]'>
+        <section id="hero-section" className='relative h-[80vh] flex flex-col items-center justify-center bg-[#331707]'>
           <div id='hero-content' className='w-[90%] md:w-[80%] lg:w-[65%] text-center flex flex-col items-center'>
-            <svg id='svgicon' className="w-[120px] h-[120px] md:w-[200px] md:h-[200px]" viewBox="0 0 463 284" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg id='svgicon' className="w-[120px] h-[120px] md:w-[200px] md:h-[200px] z-10" viewBox="0 0 463 284" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect y="179" width="105" height="105" fill="#FFE9D9" />
               <rect x="179" y="179" width="105" height="105" fill="#FFE9D9" />
               <rect x="31" y="105.246" width="105" height="105" transform="rotate(-45 31 105.246)" fill="#FFE9D9" />
@@ -73,28 +118,39 @@ const page = () => {
               <rect x="358" y="179" width="105" height="105" fill="#FFE9D9" />
               <rect x="284" y="105.246" width="105" height="105" transform="rotate(-45 284 105.246)" fill="#FFE9D9" />
             </svg>
+
             <h1 className='text-[#ffe9d9] font-times text-3xl md:text-5xl lg:text-6xl mt-4'>
               The First Media Company crafted For the Digital First Generation
             </h1>
           </div>
-          
-        </section>
-        <Logo3D cubeRef={cubeRef} />
-        <Logo3D cubeRef={cubeRef} />
-        <Logo3D cubeRef={cubeRef} />
-        <Logo3D cubeRef={cubeRef} />
-        <Logo3D cubeRef={cubeRef} />
-        <Logo3D cubeRef={cubeRef} />
 
 
-        <section id="about-section" className='h-screen flex items-center justify-center bg-[#331707] py-20'>
+          <div className="absolute inset-0 pointer-events-none z-10">
+            {[0,1,2,3,4,5].map((i) => {
+              if (!cubeRefs.current[i]) cubeRefs.current[i] = React.createRef();
+              return (
+                <div
+                  key={i}
+                  id={`logo-wrap-${i+1}`}
+                  className="logo-wrap opacity-0"
+                  style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
+                >
+                  <Logo3D cubeRef={cubeRefs.current[i]} className="w-[80px] h-[80px] md:w-[120px] md:h-[120px]" />
+                </div>
+              )
+            })}
+          </div>
+
           <div id="about-content" className='w-[90%] md:w-[60%] lg:w-[40%] px-4'>
             <h1 className='text-[#ffe9d9] text-2xl md:text-3xl text-center mb-6'>Where innovation meets precision.</h1>
             <p className='text-[#ffe9d9] text-sm md:text-base text-center font-thin leading-relaxed'>
               Symphonia unites visionary thinkers, creative architects, and analytical experts, collaborating seamlessly to transform challenges into opportunities. Together, we deliver tailored solutions that drive impact and inspire growth.
             </p>
           </div>
+
         </section>
+
+
 
 
         <section className='h-screen bg-[#cdb9ab] flex items-center justify-center'>

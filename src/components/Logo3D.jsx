@@ -17,26 +17,7 @@ const TexturedCube = forwardRef((props, ref) => {
         '/textures/face6.png',
     ]);
 
-    // Use internal hook to animate based on the parent's ScrollTrigger
-    useGSAP(() => {
-        if (!ref.current) return;
-
-        gsap.fromTo(
-            ref.current.rotation,
-            { y: 0, x: 0 },
-            {
-                y: Math.PI * 2,
-                x: Math.PI / 3,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "#hero-section",
-                    start: "top top",
-                    end: "+=70%",
-                    scrub: true,
-                }
-            }
-        );
-    }, { dependencies: [ref] });
+    // Rotation/animation is controlled by parent so this component stays presentational.
 
     return (
         <mesh ref={ref} {...props}>
@@ -50,9 +31,9 @@ const TexturedCube = forwardRef((props, ref) => {
 
 TexturedCube.displayName = 'TexturedCube';
 
-const Logo3D = ({ cubeRef }) => {
+const Logo3D = ({ cubeRef, className = "", style = {}, id }) => {
     return (
-        <div className="w-[180px] h-[180px] md:w-[190px] md:h-[190px]">
+        <div id={id} className={`${className} w-[180px] h-[180px] md:w-[190px] md:h-[190px]`} style={style}>
             <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
                 <ambientLight intensity={1.5} />
                 <pointLight position={[10, 10, 10]} intensity={1} />
