@@ -12,7 +12,7 @@ const page = () => {
 
 
   useGSAP(() => {
-    // Initialize ScrollSmoother
+
     ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
@@ -20,12 +20,12 @@ const page = () => {
       effects: true,
     });
 
-    // Hero Section Animation & Pinning
+
     gsap.timeline({
       scrollTrigger: {
         trigger: "#hero-section",
         start: "top top",
-        end: "+=100%",
+        end: "+=70%",
         scrub: true,
         pin: true,
       },
@@ -35,7 +35,7 @@ const page = () => {
         { scale: 1.4, filter: "blur(12px)", opacity: 0, ease: "none" }
       );
 
-    // About Section Animation & Pinning
+
     gsap.timeline({
       scrollTrigger: {
         trigger: "#about-section",
@@ -56,8 +56,8 @@ const page = () => {
   return (
     <div id="smooth-wrapper" className="bg-[#331707] overflow-hidden">
       <div id="smooth-content">
- 
-        <section id="hero-section" className='h-screen flex items-center justify-center bg-[#331707]'>
+
+        <section id="hero-section" className='h-[80vh] flex items-center justify-center bg-[#331707]'>
           <div id='hero-content' className='w-[90%] md:w-[80%] lg:w-[65%] text-center flex flex-col items-center'>
             <svg className="w-[120px] h-[120px] md:w-[200px] md:h-[200px]" viewBox="0 0 463 284" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect y="179" width="105" height="105" fill="#FFE9D9" />
@@ -73,7 +73,7 @@ const page = () => {
           </div>
         </section>
 
-     
+
         <section id="about-section" className='h-screen flex items-center justify-center bg-[#331707] py-20'>
           <div id="about-content" className='w-[90%] md:w-[60%] lg:w-[40%] px-4'>
             <h1 className='text-[#ffe9d9] text-2xl md:text-3xl text-center mb-6'>Where innovation meets precision.</h1>
@@ -83,7 +83,7 @@ const page = () => {
           </div>
         </section>
 
-      
+
         <section className='h-screen bg-[#cdb9ab] flex items-center justify-center'>
           <h1 className='text-3xl md:text-4xl font-times text-[#331707]'>Your next section goes here.</h1>
         </section>
